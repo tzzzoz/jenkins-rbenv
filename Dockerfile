@@ -4,8 +4,8 @@ MAINTAINER tzzzoz <tzzzoz@gmail.com>
 USER root
 RUN apt-get update
 RUN apt-get install -y ruby-build  \
-  && apt-get install -y vim && apt-get install ruby-all-dev \
-  && apt-get install postgresql-client libpq5 libpq-dev
+  && apt-get install -y vim && apt-get install -y ruby-all-dev \
+  && apt-get install -y postgresql-client libpq5 libpq-dev
 RUN groupadd ruby
 RUN gpasswd -a jenkins ruby
 
