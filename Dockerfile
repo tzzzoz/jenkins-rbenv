@@ -26,7 +26,7 @@ RUN echo 'eval "$(rbenv init -)"'               >> /etc/bash_profile
 USER jenkins
 
 COPY plugins.txt /plugins.txt
-RUN  plugins.sh /plugins.txt
+RUN  install-plugins.sh < /plugins.txt
 
 WORKDIR $JENKINS_HOME
 ENTRYPOINT ["/usr/local/bin/jenkins.sh"]
