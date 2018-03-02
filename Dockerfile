@@ -3,7 +3,9 @@ MAINTAINER Hiroshi Ota <otahi.pub@gmail.com>
 
 USER root
 RUN apt-get update
-RUN apt-get install -y ruby-build
+RUN apt-get install -y ruby-build  \
+  && apt-get install -y vim && apt-get install ruby-all-dev \
+  && apt-get install postgresql-client libpq5 libpq-dev
 RUN groupadd ruby
 RUN gpasswd -a jenkins ruby
 
@@ -22,6 +24,8 @@ RUN chmod -R g+rwxs ruby-build
 RUN echo 'export RBENV_ROOT=/usr/local/rbenv'   >> /etc/bash_profile
 RUN echo 'export PATH="$RBENV_ROOT/bin:$PATH"'  >> /etc/bash_profile
 RUN echo 'eval "$(rbenv init -)"'               >> /etc/bash_profile
+
+RUN gem install bundler
 
 USER jenkins
 
