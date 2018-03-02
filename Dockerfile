@@ -25,6 +25,10 @@ RUN echo 'export RBENV_ROOT=/usr/local/rbenv'   >> /etc/bash_profile
 RUN echo 'export PATH="$RBENV_ROOT/bin:$PATH"'  >> /etc/bash_profile
 RUN echo 'eval "$(rbenv init -)"'               >> /etc/bash_profile
 
+RUN rbenv install 2.4.3
+RUN rbenv gloabl 2.4.3
+RUN rbenv rehash
+
 RUN gem install bundler
 
 USER jenkins
