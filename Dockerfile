@@ -1,5 +1,5 @@
 FROM jenkins/jenkins:lts
-MAINTAINER Hiroshi Ota <otahi.pub@gmail.com>
+MAINTAINER tzzzoz <tzzzoz@gmail.com>
 
 USER root
 RUN apt-get update
