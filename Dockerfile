@@ -3,33 +3,38 @@ MAINTAINER tzzzoz <tzzzoz@gmail.com>
 
 USER root
 RUN apt-get update
-RUN apt-get install -y ruby-build  \
+RUN apt-get install -y build-essential libssl-dev libreadline-dev zlib1g-dev \
   && apt-get install -y vim && apt-get install -y ruby-all-dev \
   && apt-get install -y postgresql-client libpq5 libpq-dev
-RUN groupadd ruby
-RUN gpasswd -a jenkins ruby
 
-WORKDIR /usr/local
-RUN git clone https://github.com/sstephenson/rbenv.git
 
-RUN chgrp -R ruby rbenv
-RUN chmod -R g+rwxXs rbenv
+RUN git clone git://github.com/rbenv/rbenv.git /usr/local/rbenv \
+&&  git clone git://github.com/rbenv/ruby-build.git /usr/local/rbenv/plugins/ruby-build \
+&&  git clone git://github.com/jf/rbenv-gemset.git /usr/local/rbenv/plugins/rbenv-gemset \
+&&  /usr/local/rbenv/plugins/ruby-build/install.sh
+ENV PATH /usr/local/rbenv/bin:$PATH
+ENV RBENV_ROOT /usr/local/rbenv
 
-RUN mkdir rbenv/plugins
-WORKDIR /usr/local/rbenv/plugins
-RUN git clone https://github.com/sstephenson/ruby-build.git
-RUN chgrp -R ruby ruby-build
-RUN chmod -R g+rwxs ruby-build
+RUN echo 'export RBENV_ROOT=/usr/local/rbenv' >> /etc/profile.d/rbenv.sh \
+&&  echo 'export PATH=/usr/local/rbenv/bin:$PATH' >> /etc/profile.d/rbenv.sh \
+&&  echo 'eval "$(rbenv init -)"' >> /etc/profile.d/rbenv.sh
 
-RUN echo 'export RBENV_ROOT=/usr/local/rbenv'   >> /etc/bash_profile
-RUN echo 'export PATH="$RBENV_ROOT/bin:$PATH"'  >> /etc/bash_profile
-RUN echo 'eval "$(rbenv init -)"'               >> /etc/bash_profile
+RUN echo 'export RBENV_ROOT=/usr/local/rbenv' >> /root/.bashrc \
+&&  echo 'export PATH=/usr/local/rbenv/bin:$PATH' >> /root/.bashrc \
+&&  echo 'eval "$(rbenv init -)"' >> /root/.bashrc
 
-RUN rbenv install 2.4.3
-RUN rbenv gloabl 2.4.3
-RUN rbenv rehash
+ENV CONFIGURE_OPTS --disable-install-doc
+ENV PATH /usr/local/rbenv/bin:/usr/local/rbenv/shims:$PATH
 
-RUN gem install bundler
+ENV RBENV_VERSION 2.4.3
+
+RUN eval "$(rbenv init -)"; rbenv install $RBENV_VERSION \
+&&  eval "$(rbenv init -)"; rbenv global $RBENV_VERSION \
+&&  eval "$(rbenv init -)"; gem update --system \
+&&  eval "$(rbenv init -)"; gem install bundler -f \
+&&  rm -rf /tmp/*
+
+COPY id_rsa /root/.ssh/id_rsa
 
 USER jenkins
 
