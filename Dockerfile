@@ -27,6 +27,7 @@ ENV CONFIGURE_OPTS --disable-install-doc
 ENV PATH /usr/local/rbenv/bin:/usr/local/rbenv/shims:$PATH
 
 ENV RBENV_VERSION 2.4.3
+ENV JENKINS_DISPLAYURL_PROVIDER org.jenkinsci.plugins.displayurlapi.ClassicDisplayURLProvider
 
 RUN eval "$(rbenv init -)"; rbenv install $RBENV_VERSION \
 &&  eval "$(rbenv init -)"; rbenv global $RBENV_VERSION \
